@@ -1,0 +1,74 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<SCRIPT language="JavaScript" type="text/javascript"
+	src="http://map.vworld.kr/js/vworldMapInit.js.do?apiKey=10036FCE-3940-374C-B2ED-E6FBDF47CFA9"></SCRIPT>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.11.1/ol.min.js"></script>
+<style>
+</style>
+<meta charset="UTF-8">
+<title>geoserver, openlayer</title>
+</head>
+<div id="map"></div>
+<body>
+
+	<script>
+		var view = new ol.View({
+			zoom : 14, // 초기화면 zoom level
+			minZoom : 5, // 최소 zoom level
+			maxZoom : 20, // 최대 zoom level
+			projection : 'EPSG:4326',
+			center : [ 127.0437, 37.6477 ]
+		});
+		var layerExample = new ol.source.TileWMS({
+		    url : 'http://localhost:8090/geoserver/cite/wms',
+			params : {'layers:cite:ALSMD_CONT_LDREG_27_202205' : 'postgis_test:cite:LSMD_CONT_LDREG_27_202205', 'TILED' : true},
+		    serverType : 'geoserver',
+		    crossOrigin : 'anonymous',
+		    projection : 'EPSG:4326',
+		    });
+		
+		var map = new ol.Map({
+			  layers: [
+			    new ol.layer.Tile({
+			        source : new ol.source.XYZ({
+			            url:'http://api.vworld.kr/req/wmts/1.0.0/10036FCE-3940-374C-B2ED-E6FBDF47CFA9/Base/{z}/{y}/{x}.png'
+			        }),
+			    }),
+			    	
+			    	new ol.layer.Tile({
+			    		label : 'layerExample', 
+			        	source : layerExample,
+			        	visible : false,
+			    	}),
+			    ],
+			  target: 'map',
+			  view: view
+			});
+			
+
+		/**************레이어 **************
+		var wmsLayer = new ol.layer.Tile({
+			source : new ol.source.TileWMS({
+				url : 'http://localhost:8090/geoserver/cite/wms',
+				params : {
+					'VERSION' : '1.1.0',
+					'LAYERS' : 'cite:ALSMD_CONT_LDREG_27_202205',
+					'BBOX' : [ 322074.875, 234925.578125, 359154.78125,
+							280754.71875 ],
+					'SRS' : 'EPSG:404000',
+					'FORMAT' : 'application/openlayers'
+				},
+				severType : 'geoserver',
+			})
+		});
+			*/
+	</script>
+</body>
+</html>

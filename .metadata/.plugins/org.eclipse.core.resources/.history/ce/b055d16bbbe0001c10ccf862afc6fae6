@@ -1,0 +1,208 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<script	src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.11.1/ol.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=10036FCE-3940-374C-B2ED-E6FBDF47CFA9"></script>
+<!-- 리플렛 js -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<!-- 리플렛 css -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+<style>
+		#leafletMap{
+			height: 390px;
+			width: 100%;
+		}
+</style>
+<meta charset="UTF-8">
+<title>geoserver123, openlaye123rz</title>
+</head>
+
+<body>
+	<div class="page-header">
+		<h1>VWORLD로 리플릿 배경지도 띄우기</h1>
+	</div>
+	<div id="leafletMap" class="lea"></div>
+	
+		<div id="map_mode">
+		<button type="button" id="geo">GEOSERVER</button>
+
+	</div>
+	<script>
+	
+	//위도
+	var lon = 37.559718;
+	
+	//경도
+	var lat = 126.971120;
+	
+	//leaflet 지도 띄우기 (EPSG : 4326)
+	var leafletMap = L.map('leafletMap').setView([lon, lat], 14)
+
+	L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/10036FCE-3940-374C-B2ED-E6FBDF47CFA9/Base/{z}/{y}/{x}.png').addTo(leafletMap);
+
+	//마커추가
+	leafletAddMarker(lon, lat);
+	
+	//폴리곤추가
+	leafletAddPolygon();
+	
+	//원추가
+	leafletAddCircle(37.572148, 126.976423);
+	
+	var popup = L.popup();
+
+	function onMapClick(e) {
+	    popup
+	        .setLatLng(e.latlng)
+	        .setContent("You clicked the map at " + e.latlng.toString())
+	        .openOn(leafletMap);
+	}
+
+	leafletMap.on('click', onMapClick);
+	
+	//마커 추가
+	function leafletAddMarker(lon, lat){
+		//핀마커
+		var marker = L.marker([lon, lat]).addTo(leafletMap);
+		
+		//팝업 클릭시
+		marker.bindPopup("<b>오픈메이트</b>").openPopup();
+	}
+	
+	//원추가
+	function leafletAddCircle(lon, lat){
+		//원
+		var circle = L.circle([lon, lat], {
+		    color: 'red',
+		    fillColor: '#f03',
+		    fillOpacity: 0.5,
+		    radius: 500
+		}).addTo(leafletMap);
+		
+		//팝업 클릭시
+		circle.bindPopup("<b>시위를 많이하는곳</b>");
+	}
+	
+	//폴리곤추가
+	function leafletAddPolygon(){
+		//폴리곤
+		var polygon = L.polygon([
+		    [37.553609, 126.972603], 	//서울역
+		    [37.560133, 126.963687], 	//충정로역
+		    [37.565830, 126.966650],	//서대문역	
+		    [37.566230, 126.976809]		//시청역
+		]).addTo(leafletMap);	
+		
+		//팝업 클릭시
+		polygon.bindPopup("<b>주변 지하철역</b>");
+	}
+	
+	var map = new ol.Map({
+		target: 'map',
+		layers: [
+		   new ol.layer.Tile({
+		source: new ol.source.XYZ({
+		//Vworld Tile 변경
+		 url: 'http://xdworld.vworld.kr:8080/2d/Base/202002/{z}/{x}/{y}.png'
+		 })
+		 })
+		],
+		view: new ol.View({
+		center: [14126669.41589247, 4493404.190498611],
+		zoom: 7,
+		minZoom: 7,
+		maxZoom: 19
+		})
+		});
+	
+	$(document).on('click', '#geo', function() {
+		var wmsLayer = L.tileLayer.wms('http://localhost:8090/geoserver/cite/wms', {
+	        layers: 'cite:sig',
+	        transparent: true,
+	        format: 'image/png'
+	    }).addTo(leafletMap);
+	});
+	
+	/*	
+	var source = new ol.source.XYZ({
+	    url: 'http://xdworld.vworld.kr:8080/2d/Base/201802/{z}/{x}/{y}.png'
+	});
+	
+
+
+	//타일레이어 생성하기
+	var viewLayer = new ol.layer.Tile({
+	    source: source
+	});
+
+	//geoserver 설정
+	var tileImg = new ol.layer.Tile({
+	    visible: true,
+	    source: new ol.source.TileWMS({
+	        url: 'http://localhost:8090/geoserver/test/wms',
+	        params: {
+	            'FORMAT': 'application/openlayers',
+	            'VERSION': '1.1.0',
+	            tiled: true,
+	            "STYLES": '',
+	            "LAYERS": 'test:litest' // workspace:layer
+	        }
+	    })
+	});
+
+	//위치는 우리나라 중앙쯤(?)
+	var view = new ol.View({
+	    center: [14377556.389982047, 4186024.063626864],
+	    zoom: 14,
+	});
+
+	var mapView = new ol.Map({
+	    target: "map", // 지도를 생성할 element 객체의 id 값,
+	    layers: [viewLayer, tileImg], //생성한 레이어 추가,
+	    view: view //view 설정
+	});
+/*
+	var view = new ol.View({
+		zoom : 14, // 초기화면 zoom level
+		minZoom : 5, // 최소 zoom level
+		maxZoom : 20, // 최대 zoom level
+		projection : 'EPSG:4326',
+		center : [127.0437, 37.6477]
+	});
+	/*레이어*/
+/*	var wmsLayer = new ol.layer.Tile({
+	source : new ol.source.TileWMS({
+		url : 'http://localhost:8090/geoserver/test/wms',
+		params : {
+			'VERSION' : '1.1.0',
+			'LAYERS' : 'test:litest',
+			'BBOX' : [ 124.5853828124665, 33.05055453889834, 131.9500206623607,38.61594650426875 ],
+			'SRS' : 'EPSG:4326',
+			'FORMAT' : 'application/openlayers'
+		},
+		severType : 'geoserver',
+		})
+	});
+	/*
+	var layerExample = new ol.source.TileWMS({
+	    url : 'http://localhost:8090/geoserver/test/wms',
+		params : {'layers':'litest', 'test':'litest', 'TILED' : true},
+	    serverType : 'geoserver',
+	    crossOrigin : 'anonymous',
+	    projection : 'EPSG:4326',
+	    });
+	*
+	var map = new ol.Map({
+		  layers: wmsLayer,
+		  target: 'map',
+		  view: view
+		});
+*/
+	</script>
+</body>
+</html>

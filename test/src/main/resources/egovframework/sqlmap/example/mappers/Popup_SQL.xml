@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="egovframework.example.sample.service.impl.PopupMapper">
+
+	<resultMap id="pList" type="PopupVO">
+		<result property="p_idx" column="P_IDX" />
+		<result property="p_name" column="P_NAME" />
+		<result property="p_content" column="P_CONTENT" />
+	</resultMap>
+
+	<select id="popupList" resultMap="pList">
+		SELECT	P_IDX as p_idx,
+				P_NAME as p_name,
+				P_CONTENT as p_content
+		
+		FROM POPUP
+	</select>
+	
+	<insert id="popupInsert" parameterType="PopupVO">
+		INSERT INTO POPUP
+			(
+				P_IDX,
+				P_NAME,
+				P_CONTENT
+			)
+		VALUES(
+			'1',
+			'TEST',
+			'TEST'
+		)
+	</insert>
+	
+
+
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="D:\eGov\jre" version="1.8.0_152">
+<bootpath>
+<entry path="D:\eGov\jre\lib\resources.jar"/>
+<entry path="D:\eGov\jre\lib\rt.jar"/>
+<entry path="D:\eGov\jre\lib\sunrsasign.jar"/>
+<entry path="D:\eGov\jre\lib\jsse.jar"/>
+<entry path="D:\eGov\jre\lib\jce.jar"/>
+<entry path="D:\eGov\jre\lib\charsets.jar"/>
+<entry path="D:\eGov\jre\lib\jfr.jar"/>
+<entry path="D:\eGov\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="D:\eGov\jre\lib\ext"/>
+<entry path="C:\Windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="D:\eGov\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="D:\eGov" version="1.8.0_152">
+<bootpath>
+<entry path="D:\eGov\jre\lib\resources.jar"/>
+<entry path="D:\eGov\jre\lib\rt.jar"/>
+<entry path="D:\eGov\jre\lib\sunrsasign.jar"/>
+<entry path="D:\eGov\jre\lib\jsse.jar"/>
+<entry path="D:\eGov\jre\lib\jce.jar"/>
+<entry path="D:\eGov\jre\lib\charsets.jar"/>
+<entry path="D:\eGov\jre\lib\jfr.jar"/>
+<entry path="D:\eGov\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="D:\eGov\jre\lib\ext"/>
+<entry path="C:\Windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="D:\eGov\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>

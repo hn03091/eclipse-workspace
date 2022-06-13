@@ -1,0 +1,133 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.11.1/ol.min.js"></script>
+<style>
+</style>
+<meta charset="UTF-8">
+<title>geoserver, openlayer</title>
+</head>
+<div id="map"></div>
+<body>
+
+	<script>
+	var source = new ol.source.XYZ({
+	    url: 'http://xdworld.vworld.kr:8080/2d/Base/201802/{z}/{x}/{y}.png'
+	});
+
+	//타일레이어 생성하기
+	var viewLayer = new ol.layer.Tile({
+	    source: source
+	});
+
+	//geoserver 설정
+	var tileImg = new ol.layer.Tile({
+	    visible: true,
+	    source: new ol.source.TileWMS({
+	        url: 'http://localhost:8080/geoserver/test/wms',
+	        params: {
+	            'FORMAT': 'application/openlayers',
+	            'VERSION': '1.1.0',
+	            tiled: true,
+	            "STYLES": '',
+	            "LAYERS": 'test:litest' // workspace:layer
+	        }
+	    })
+	});
+
+	//위치는 우리나라 중앙쯤(?)
+	var view = new ol.View({
+	    center: [14377556.389982047, 4186024.063626864],
+	    zoom: 14,
+	});
+
+	var mapView = new ol.Map({
+	    target: "map", // 지도를 생성할 element 객체의 id 값,
+	    layers: [viewLayer, tileImg], //생성한 레이어 추가,
+	    view: view //view 설정
+	});
+	/*
+		var view = new ol.View({
+			zoom : 14, // 초기화면 zoom level
+			minZoom : 5, // 최소 zoom level
+			maxZoom : 20, // 최대 zoom level
+			projection : 'EPSG:4326',
+			center : [ 127.0437, 37.6477 ]
+		});
+		var layerExample = new ol.source.TileWMS({
+		    url : 'http://localhost:8090/geoserver/cite/wms',
+			params : {'layers:cite:ALSMD_CONT_LDREG_27_202205' : 'postgis_test:cite:LSMD_CONT_LDREG_27_202205', 'TILED' : true},
+		    serverType : 'geoserver',
+		    crossOrigin : 'anonymous',
+		    projection : 'EPSG:4326',
+		    });
+		
+		var wmsLayer = new ol.layer.Tile({
+			source : new ol.source.TileWMS({
+				url : 'http://localhost:8090/geoserver/test/wms',
+				params : {
+					'VERSION' : '1.1.0',
+					'LAYERS' : 'test:litest',
+					'BBOX' : [ 124.5853828124665, 33.05055453889834, 131.9500206623607,38.61594650426875 ],
+					'SRS' : 'EPSG:4326',
+					'FORMAT' : 'application/openlayers'
+				},
+				severType : 'geoserver',
+			})
+		});
+		
+		var map = new ol.Map({
+			  layers: [
+			    new ol.layer.Tile({
+			        source : new ol.source.XYZ({
+			            url:'http://api.vworld.kr/req/wmts/1.0.0/10036FCE-3940-374C-B2ED-E6FBDF47CFA9/Base/{z}/{y}/{x}.png'
+			        }),
+			    }),
+			    	
+			    	new ol.layer.Tile({
+			    		label : 'layerExample', 
+			        	source : layerExample,
+			        	visible : false,
+			    	}),
+			    	new ol.layer.Tile({
+				    	label:'wmsLayer',
+				    	source: wmsLayer,
+				    	visible : false,
+				    })
+			    ],
+			    
+			  target: 'map',
+			  view: view
+			});
+			
+
+		/**************레이어 
+		
+		
+		var wmsLayer = new ol.layer.Tile({
+			source : new ol.source.TileWMS({
+				url : 'http://localhost:8090/geoserver/cite/wms',
+				params : {
+					'VERSION' : '1.1.0',
+					'LAYERS' : 'cite:ALSMD_CONT_LDREG_27_202205',
+					'BBOX' : [ 322074.875, 234925.578125, 359154.78125,
+							280754.71875 ],
+					'SRS' : 'EPSG:404000',
+					'FORMAT' : 'application/openlayers'
+				},
+				severType : 'geoserver',
+			})
+		});
+		
+		**************/
+		
+			
+	</script>
+</body>
+</html>
