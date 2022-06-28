@@ -1,0 +1,49 @@
+//지도 소스 생성//
+var VworldBase, VworldSatellite, VworldHybrid;
+var VworldHybrid = new ol.source.XYZ({
+    url: 'http://api.vworld.kr/req/wmts/1.0.0/CEB52025-E065-364C-9DBA-44880E3B02B8/Hybrid/{z}/{y}/{x}.png'
+}); //문자 타일 레이어
+
+var VworldSatellite = new ol.source.XYZ({
+    url: 'http://api.vworld.kr/req/wmts/1.0.0/CEB52025-E065-364C-9DBA-44880E3B02B8/Satellite/{z}/{y}/{x}.jpeg'
+
+}); //항공사진 레이어 타일
+
+var VworldBase = new ol.source.XYZ({
+    url: 'http://api.vworld.kr/req/wmts/1.0.0/CEB52025-E065-364C-9DBA-44880E3B02B8/Base/{z}/{y}/{x}.png'
+
+});
+
+//지도 선택
+var mouseControlCoordinate = new ol.control.MousePosition({
+    coordinateFormat: new ol.coordinate.createStringXY(4),
+    projection: 'EPSG:3857', //좌표계 설정
+    className: 'mposition', //css 클래스 이름
+    target: document.getElementById('mouseCoordinate'), //좌표를 뿌릴 element
+});
+
+var mouseControlCoordinate2 = new ol.control.MousePosition({
+    coordinateFormat: new ol.coordinate.createStringXY(4),
+    projection: 'EPSG:3857', //좌표계 설정
+    className: 'mposition', //css 클래스 이름
+    target: document.getElementById('mouseCoordinate'), //좌표를 뿌릴 element
+});
+
+var map1 = new ol.Map({
+    controls: ol.control.defaults().extend([
+        mouseControlCoordinate2
+    ]),
+    layers: [
+        new ol.layer.Tile({
+            source: new ol.source.OSM(),
+            name: 'OSM'
+        })
+    ],
+    target: 'map1',
+    view: new ol.View({
+        center: ol.proj.transform([14324890.296973, 4277891.7105477], 'EPSG:3857', 'EPSG:900913'),
+        zoom: 16,
+        minZoom: 0,
+        maxZoom: 21
+    })
+});

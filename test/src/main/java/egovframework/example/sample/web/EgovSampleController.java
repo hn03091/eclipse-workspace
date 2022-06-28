@@ -80,6 +80,11 @@ public class EgovSampleController {
 	 * @return "egovSampleList"
 	 * @exception Exception
 	 */
+	@RequestMapping(value="/hjb2.do")
+	public String hjb2()throws Exception{
+		
+		return "hjb/hjbMap2";
+	}
 	@RequestMapping(value="/hjb.do")
 	public String hjb()throws Exception{
 		
@@ -113,7 +118,7 @@ public class EgovSampleController {
 	@RequestMapping(value = "/map2.do")
 	public String map2()throws Exception{
 		
-		return "hjb/map2";
+		return "hjb/map220623";
 	}
 	
 	@RequestMapping(value = "/egovSampleList.do")

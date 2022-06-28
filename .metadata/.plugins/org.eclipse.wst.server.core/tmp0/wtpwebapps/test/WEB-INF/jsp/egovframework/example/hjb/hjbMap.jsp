@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,10 +24,43 @@
 	text-decoration: none;
 }
 
+body {
+	
+}
+/*지오서버 정보표출창*/
+#info {
+	opacity: 0.7;
+	position: absolute;
+	top: 68%;
+	z-index: 99;
+	border-radius: 10px;
+}
+/* 지오서버의 정보표출 테이블*/
+table.featureInfo {
+	
+}
+
+table.featureInfo caption {
+	display: none;
+}
+/*팝업옵션*/
+#pop {
+	position: absolute;
+	top: 15%;
+	left: 83%;
+	border-radius: 10px;
+	z-index: 99;
+	background-color: #696868;
+	height: 250px;
+	opacity: 0.85;
+	color: white;
+}
+
 /*메뉴옵션*/
 .wrapper {
+	opacity: 0.7;
 	position: absolute;
-	top: 50%;
+	top: 55%;
 	left: 90%;
 	transform: translate(-50%, -50%);
 	z-index: 99;
@@ -40,14 +74,14 @@
 }
 
 .item {
-	border-top: 1px solid #ef584a;
+	border-top: 1px solid #696868;
 	overflow: hidden;
 }
 
 .btn {
 	display: block;
 	padding: 15px 20px;
-	background-color: #ff6f61;
+	background-color: #696868;
 	color: #fff;
 	position: relative;
 }
@@ -59,7 +93,7 @@
 	height: 0;
 	border-left: 8px solid transparent;
 	border-right: 8px solid transparent;
-	border-top: 10px solid #ff6f61;
+	border-top: 10px solid #696868;
 	right: 15px;
 	bottom: -10px;
 	z-index: 9;
@@ -190,8 +224,8 @@
 	margin-left: 10px;
 	position: block;
 	width: 85px;
-	bottom: 30px;
-	right: 30px;
+	top: 30px;
+	left: 60px;
 }
 
 .ol-mycontrol button {
@@ -209,11 +243,11 @@
 
 </head>
 <body>
-	<header
-		style="text-align: center; font-size: 50px; border-bottom: thick double #32a1ce;">
-		신입개발과제 - 홍정범	</header>
+	<header style="text-align: center; font-size: 50px;"> 신입개발과제 -
+		홍정범 </header>
+	<hr>
 
-	<div id="map" style="width: 100%; height: 700px; left: 0px; top: 0px"> 
+	<div id="map" style="width: 100%; height: 700px; left: 0px; top: 0px">
 		<!-- 검색 폼  -->
 		<div style="z-index: 99;">
 			<form id="searchForm" action="#" class="form_data"
@@ -237,8 +271,16 @@
 				</div>
 			</form>
 		</div>
+		<div id="searchMarker" style="margin-left: 60px;">
+			<label><input type="checkbox" id="mkImg"
+				value="http://map.vworld.kr/images/ol3/marker_blue.png" checked="on">
+				<img src="http://map.vworld.kr/images/ol3/marker_blue.png" /> <input
+				type="checkbox" id="mkImg"
+				value="http://map.vworld.kr/images/ol3/marker.png"> <img
+				src="http://map.vworld.kr/images/ol3/marker.png" /> </label>
+		</div>
 	</div>
-	<div id = "info" style="border:solid 2px;"> </div>
+	<div id="info" style="top: 75%; left: 50%;"></div>
 	<!-- form class="form-inline">
 		<label>Measurement type &nbsp;</label> <select id="type">
 			<option value="length">Length (LineString)</option>
@@ -295,10 +337,9 @@
 		작업제목 <input type="text" id="subj" /> 작업내용
 		<textarea id="cont"></textarea>
 	</div-->
-	<div id="mouseCoordinate"
-		style="text-align: center; margin-top: 30px; border: thick double #32a1ce;">현재
+	<div id="mouseCoordinate" style="text-align: center; margin-top: 70px;">현재
 		마우스좌표</div>
-
+	<div id="pop" style="width: 300px; display: none;"></div>
 	<!-- div>
       <label><input type="checkbox" id="mkImg"
 			value="<c:url value='http://map.vworld.kr/images/ol3/marker_blue.png'/>"
@@ -336,8 +377,8 @@
 				value="POINT(14028876.609587036 3912653.333809428)">
 		</form>
 	</div>
-	<div style="border-style: groove; padding: 10px;">
-		<P class="noticePrev">검색결과
+	<div style="padding: 10px;">
+		<!-- P class="noticePrev">검색결과 -->
 		<p class="notice" style="display: none; color: red;">클릭시 해당 좌표로
 			이동합니다
 		<hr>
@@ -350,10 +391,39 @@
 
 		<p id="result_pos"></p>
 	</div>
+	<label><input type="checkbox" id="loadview" value="1">로드뷰
+		보기</label>
+	<button type="button" onclick="javascript:test2();">ㅅㄷㄴㅅ2</button>
+	
 
 
 
 	<script>
+	
+	function test2(){
+		
+		
+        var checkloadview=$('input:checkbox[id="loadview"]:checked').length;
+        console.log(checkloadview);
+        if(checkloadview >0){
+            map.on('singleclick', function(event) {
+    
+            // 마우스 커서 아래의 좌표값 구하기
+            var coordinate = event.coordinate;
+            lon = coordinate[0];
+            lat = coordinate[1];
+            var tansform = ol.proj.transform([lon,lat], 'EPSG:3857', 'EPSG:4326')// 브이월드 좌표계에서 다음 지도 좌표계로 변환 EPSG:3857=>EPSG:4326
+            console.log(tansform);
+            var loadview="https://map.kakao.com/link/roadview/"+tansform[1]+","+tansform[0];   // 로드뷰 불러오기
+            window.open(loadview, '로드뷰팝업', 'width=500, height=700, scrollbars=yes, resizable=no')
+            
+            });
+            
+            
+        }else if(checkloadview=0){
+        	
+        }
+    }
 	// 지오서버 wms//
 	var sigWms = new ol.layer.Tile({
             opacity:0.5,
@@ -394,7 +464,7 @@
                 url : 'http://localhost:8090/geoserver/cite/wms?service=WMS', // 1. 레이어 URL
                 params : {
                     'VERSION' : '1.1.0', // 2. 버전
-                    'LAYERS' : 'cite:icon', // 3. 작업공간:레이어 명
+                    'LAYERS' : 'cite:SQLicon', // 3. 작업공간:레이어 명
                     
                     'SRS' : 'EPSG:3857', // SRID
                     'FORMAT' : 'image/png' // 포맷
@@ -416,12 +486,12 @@
         
         map.addLayer(iconWms);
         //icon 의 정보 불러오기
-            var view = map.getView();
-            map.on('singleclick', function (evt) {
-            document.getElementById('info').innerHTML = '';
+            var view = map.getView();	
+            map.on('singleclick', function (evt) {	//클릭할시
+            document.getElementById('info').innerHTML = ''; //html에 생성된 info라는 div에 정보를 표출함.
                 var viewResolution = /** @type {number} */ (view.getResolution());
-                var source = iconWms.getSource();
-                var url = source.getFeatureInfoUrl(
+                var source = iconWms.getSource();	//표출되어있는 wms의 소스를 저장
+                var url = source.getFeatureInfoUrl(	//getFeautreInfoUrl을 통하여 정보를 url로 뽑아냄 
                     evt.coordinate,
                     viewResolution,
                     'EPSG:3857',
@@ -593,7 +663,7 @@
             ///////////////////////////////////////////////
             var mouseControlCoordinate = new ol.control.MousePosition({
 			coordinateFormat : new ol.coordinate.createStringXY(4),
-			projection : 'EPSG:4326',//좌표계 설정
+			projection : 'EPSG:3857',//좌표계 설정
 			className : 'mposition', //css 클래스 이름
 			target : document.getElementById('mouseCoordinate'),//좌표를 뿌릴 element
 		});
@@ -620,9 +690,9 @@
 		],
 		target: 'map',
 		view: new ol.View({
-			center: ol.proj.transform([128.6820,35.8346], 'EPSG:4326', 'EPSG:900913'),
-			zoom: 16,
-			minZoom : 0,
+			center: ol.proj.transform([14251786.1081, 4326774.9796], 'EPSG:3857', 'EPSG:900913'),
+			zoom: 7,
+			minZoom : 7,
 			maxZoom : 21
 		})
 	});
@@ -634,15 +704,33 @@
 		
         
         if(markerSource==null){ //첫 검색시 마커소스가 null 임으로 새로운 벡터레이어 생성
-            
             markerSource = new ol.source.Vector();
-            
-        
         }else if(markerSource !=null){ //전에 검색해서 생성된 레이어 모두 삭제
             markerLayer.getSource().clear();
         }
         markerSource.set("name","마커레이어");
+		
+        let imgLength = $('input:checkbox[id="mkImg"]:checked').length;
+        let imgsrc = $('input:checkbox[id="mkImg"]:checked').val();
+        if(imgLength != 1){
+            alert('마커를 한개만 선택하여주세요.');
+            return false;
+        }else if(imgLength =1){
+            //style을 활용해서, point의 style을 변경한다.
+            var markerStyle = new ol.style.Style({
+                image: new ol.style.Icon({ //마커 이미지
+                    opacity: 1, //투명도 1=100% 
+                    scale: 1, //크기 1=100%
 
+                    //marker 이미지, 해당 point를 marker로 변경한다.
+                    src: imgsrc
+                    //'https://openlayers.org/en/v3.20.1/examples/data/icon.png'
+                }),
+                //html의 css, z-index 기능이다.
+                zindex: 1300
+            });
+        }
+        
 			$.ajax({
 				type: "get",
 				url: "https://api.vworld.kr/req/search",
@@ -655,10 +743,11 @@
 						alert("검색결과가 없습니다.");
 					}else{
 						$('p.notice').show();
-						$('p.noticePrev').hide();
+						//$('p.noticePrev').hide();
 						var result_html ="";
-						
+						var marker_html ="";
 						for(var o in data.response.result.items){ 
+							var marker_html ="";
 							/*if(o==0){			//검색 결과가있을시 검색결과의 첫번째 값 좌표로 이동
 								move(data.response.result.items[o].point.x*1,data.response.result.items[o].point.y*1);
 							}*/
@@ -667,26 +756,53 @@
 	                        var point_feature = new ol.Feature({
 	                            geometry: new ol.geom.Point([x, y]).transform('EPSG:900913', 'EPSG:3857')
 	                        });
-	                        //style을 활용해서, point의 style을 변경한다.
-	                        var markerStyle = new ol.style.Style({
-	                            image: new ol.style.Icon({ //마커 이미지
-	                                opacity: 1, //투명도 1=100% 
-	                                scale: 1, //크기 1=100%
-
-	                                //marker 이미지, 해당 point를 marker로 변경한다.
-	                                src: 'https://openlayers.org/en/v3.20.1/examples/data/icon.png'
-	                            }),
-	                            //html의 css, z-index 기능이다.
-	                            setZindex: 1200
-	                        });
-	                        //markerSource에 등록한 point를 담는다. addFeature를 이용해서, 여러개의 point를 source에 담는다.
-	                        markerSource.addFeature(point_feature);
 	                        
-	                        // 마커 레이어 생성
-	                        markerLayer = new ol.layer.Vector({
-	                            source: markerSource, //마커 feacture들
-	                            style: markerStyle //마커 스타일
-	                        });
+	                        var title = data.response.result.items[o].address.bldnm
+							var contents = data.response.result.items[o].address.road
+							var cont = "2"; //내용이없을경우 팝업 제외하기위하여 추가 검색시 생성되는 마커는 모두 내용이 있음으로 cont 내용을 추가함
+	                        marker_html += "<span> 장소 :"+title+"<hr>도로명 :"+ contents+"</span>";
+	                        point_feature.set("subj",marker_html);
+	                        point_feature.set("cont",cont);
+	                       
+	                        /*let imgLength = $('input:checkbox[id="mkImg"]:checked').length;
+	                        let imgsrc = $('input:checkbox[id="mkImg"]:checked').val();
+	                        if(imgLength != 1){
+	                            alert('마커를 한개만 선택하여주세요.');
+	                            return false;
+	                        }else if(imgLength =1){
+	                            //style을 활용해서, point의 style을 변경한다.
+	                            var markerStyle = new ol.style.Style({
+	                                image: new ol.style.Icon({ //마커 이미지
+	                                    opacity: 1, //투명도 1=100% 
+	                                    scale: 1, //크기 1=100%
+
+	                                    //marker 이미지, 해당 point를 marker로 변경한다.
+	                                    src: imgsrc
+	                                    //'https://openlayers.org/en/v3.20.1/examples/data/icon.png'
+	                                }),
+	                                //html의 css, z-index 기능이다.
+	                                zindex: 1001
+	                            });
+	                        }*/
+	                       /*
+	                        var subj = data.response.result.items[o].address.road
+	                        var cont = data.response.result.items[o].address.parcel
+	                        marker_html += "<span> <hr>도로명 :" + subj + "<hr>지번 :"+ cont + "</span>";
+	                        console.log(marker_html);
+	                        point_feature.set("subj", marker_html);
+	                        */
+	                        //point_feature.set("cont", cont);
+	                        
+	                        //markerSource에 등록한 point를 담는다. addFeature를 이용해서, 여러개의 point를 source에 담는다.
+	                            markerSource.addFeature(point_feature);
+	                       
+	                            // 마커 레이어 생성
+	                            markerLayer = new ol.layer.Vector({
+	                                source: markerSource, //마커 feacture들
+	                                style: markerStyle, //마커 스타일
+	                                zindex: 1300
+	                            });
+	                           
 							
 							result_html += "<hr><li><p onclick='move("+data.response.result.items[o].point.x+","+data.response.result.items[o].point.y+
 									")'> 도로명: "+ data.response.result.items[o].address.road +
@@ -777,17 +893,44 @@
             select = new ol.interaction.Select({
                 //condition: ol.events.condition.pointerMove
                 condition: ol.events.condition.click
+                
             })
             select.set("이벤트", "선택");
             select.on("select", function (evt) {
                 var length = evt.target.getFeatures().getLength();
+                var popContent="";
                 if (length > 0) {
                     //console.log(length);
                     subj = evt.target.getFeatures().getArray()[0].get("subj"); //객체에 저장된 제목과 내용 찾은후 저장
-                    cont = evt.target.getFeatures().getArray()[0].get("cont");
-                    document.getElementById('subj').value = subj; //저장된 내용을 표출
-                    document.getElementById('cont').value = cont;
-                }
+                    cont = evt.target.getFeatures().getArray()[0].get("cont");	//내용이없을 경우를 위하여 추가
+                    //document.getElementById('subj').value = subj; //저장된 내용을 표출
+                    //document.getElementById('cont').value = cont;
+                    //var test=select.condition();
+                    var features = evt.target.getFeatures().getArray();
+                    var xy=features[0].getGeometry().getCoordinates();
+                    var checkloadview=$('input:checkbox[id="loadview"]:checked').length;
+                    lon= xy[0];
+                    lat= xy[1];
+                    console.log(lon+'test'+lat);
+                    if(checkloadview >0){
+                    	
+                        var tansform = ol.proj.transform([lon,lat], 'EPSG:3857', 'EPSG:4326')// 브이월드 좌표계에서 다음 지도 좌표계로 변환 EPSG:3857=>EPSG:4326
+                        console.log(tansform);
+                        var loadview="https://map.kakao.com/link/roadview/"+tansform[1]+","+tansform[0];   // 로드뷰 불러오기
+                        window.open(loadview, '로드뷰팝업', 'width=500, height=700, scrollbars=yes, resizable=no')
+                        
+                        }
+                        
+                        
+                    }
+                    if(cont !=''){
+                        $('#pop').show();
+                    }else if(cont ==''){
+                        $('#pop').hide();
+                    }
+                    popContent += subj;
+                        $('#pop').html(popContent);
+                
             })
 
             map.addInteraction(select);
@@ -839,7 +982,7 @@
                         output = formatLength(geom);
                         tooltipCoord = geom.getLastCoordinate();
                     } else if (geom instanceof ol.geom.Circle) {//거리계산 구현
-                        var length = ol.sphere.getDistance(ol.proj.transform(geom.getCenter(), 'EPSG:900913', 'EPSG:4326'), ol.proj.transform(geom.getLastCoordinate(), 'EPSG:900913', 'EPSG:4326'), 6378137)
+                        var length = ol.sphere.getDistance(ol.proj.transform(geom.getCenter(), 'EPSG:900913', 'EPSG:3857'), ol.proj.transform(geom.getLastCoordinate(), 'EPSG:900913', 'EPSG:3857'), 6378137)
                         if (length > 100) {
                             output = (Math.round(length / 1000 * 100) / 100) +
                                 ' ' + 'km';
@@ -857,9 +1000,16 @@
         draw.on('drawend',
             function (evt) {
                 feature = evt.feature;
-                feature.set("subj", document.getElementById('subj').value); //지도에 그릴시 내용을 feature 저장
-                feature.set("cont", document.getElementById('cont').value);
-				
+                var subj = document.getElementById('subj').value
+                var cont = document.getElementById('cont').value
+
+                var marker_html="";
+                marker_html+= "<span>작업 제목 :"+subj+"<hr>작업 내용 :"+cont+"<span>";
+                
+                
+                feature.set("subj",marker_html);
+                feature.set("cont",cont);
+                
                 measureTooltipElement.className = 'tooltip tooltip-static';
                 measureTooltip.setOffset([0, -7]);
                 // unset sketch
