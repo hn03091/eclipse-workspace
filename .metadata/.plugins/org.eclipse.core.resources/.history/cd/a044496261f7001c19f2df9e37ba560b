@@ -985,7 +985,7 @@ function roadview(map){
             setId =  Math.random(); //굳이 필요하진 않은거같은데 혹시 삭제할수도있으니 저장
             roadMarker.setStyle(markerStyle);
             roadMarker.setId(setId);
-            roadMarker.set("cont",'');
+            roadMarker.set("cont",'123');
         
             roadmarkerSource = new ol.source.Vector({
                 features: [roadMarker]
@@ -1275,9 +1275,9 @@ var move = function(x,y,roadText,bldnmText){
             //markerLayer_2.getSource().clear(); //검색결과시 생성된 마커삭제
             if(searchMarker != null){   //검색결과시 생성된 마커 숨김, 이동시 마커는 생성
                 //markerLayer.getSource().clear();
-                markerLayer_2.setVisible(false);
+                markerLayer.setVisible(false);
             }else if(searchMarker == null){
-                markerLayer_2.setVisible(true);
+                markerLayer.setVisible(true);
             }
         }
         if(markerSource2_2==null){
@@ -1335,7 +1335,7 @@ function map2_delete(){
 function all_delete(){
     map1s.getLayers().forEach(layer => layer.getSource().refresh());
     map1s.getOverlays().getArray().slice(0).forEach(function(MeasureTooltip) {
-        map1s.removeOverlay(MeasureTooltip);
+        map1.removeOverlay(MeasureTooltip);
         });
     
     map2s.getLayers().forEach(layer => layer.getSource().refresh());

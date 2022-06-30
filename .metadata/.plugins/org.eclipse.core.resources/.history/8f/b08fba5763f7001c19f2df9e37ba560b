@@ -985,7 +985,7 @@ function roadview(map){
             setId =  Math.random(); //굳이 필요하진 않은거같은데 혹시 삭제할수도있으니 저장
             roadMarker.setStyle(markerStyle);
             roadMarker.setId(setId);
-            roadMarker.set("cont",'');
+            roadMarker.set("cont",'123');
         
             roadmarkerSource = new ol.source.Vector({
                 features: [roadMarker]
