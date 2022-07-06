@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="egovframework.example.sample.service.impl.AccidentMapper">
+
+	<!-- <resultMap id="aList" type="AccidentVO">
+		<result property="OBJT_ID" column="OBJT_ID" />
+		<result property="VIOLT_CN" column="VIOLT_CN"/>
+		<result property="xlon" column="X" />
+		<result property="ylat" column="Y" />
+	</resultMap> -->
+	
+	<select id="accidentList" resultType="AccidentVO">
+		SELECT  OBJT_ID,
+				VIOLT_CN,
+				X as xlon,
+				Y as ylat
+		FROM	A2SM_TFCACDSTTUS_BIG
+		WHERE X IS NOT NULL
+	</select>
+	
+	<select id="checkSql" resultType="java.util.LinkedList">
+		select table_name from all_tables where OWNER = 'C##TEST'
+	</select>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.sample.service.impl.ShimtuMapper">
+	
+	<resultMap id="pList" type="PopupVO">
+		<result property="p_idx" column="P_IDX" />
+		<result property="p_name" column="P_NAME" />
+		<result property="p_content" column="P_CONTENT" />
+	</resultMap>
+	
+	<select id="shimtuList" resultMap="sList">
+	SELECT  OBJT_ID,
+			SHLTR_NM,
+			ROAD_NM,
+			ROAD_DRC,
+			TOILET_YN,
+			MNG_NM,
+			MNG_TEL,
+			ADRES,
+			RN_ADRES,
+			X,
+			Y
+	FROM	LYR_DROWSYSHELTER
+	</select>
+
+</mapper>

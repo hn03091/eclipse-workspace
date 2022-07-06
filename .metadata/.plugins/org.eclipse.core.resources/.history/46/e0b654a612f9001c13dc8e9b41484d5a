@@ -1,0 +1,13 @@
+package egovframework.example.sample.service.impl.accident;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import egovframework.example.sample.service.accident.AccidentService;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
+
+@Service("accidentService")
+public class AccidentServiceImpl extends EgovAbstractServiceImpl implements AccidentService {
+	@Autowired AccidentMapper accidentMapper;
+
+}

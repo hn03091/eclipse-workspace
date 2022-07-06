@@ -1,0 +1,14 @@
+package egovframework.example.sample.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import egovframework.example.sample.service.ShimtuService;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
+@Service("shimtuService")
+public class ShimtuServiceImpl extends EgovAbstractServiceImpl implements ShimtuService{
+	
+	@Autowired ShimtuMapper shimtuMapper;
+
+}

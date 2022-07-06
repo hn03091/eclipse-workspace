@@ -1,4 +1,77 @@
 
+/**
+*	list[?]
+*	0=졸음쉼터명, 1=도로노선명, 2=도로노선방향, 3= 화장실 유무, 4= 관리기관명,
+*	5= 관리기관 전화번호, 6=쉼터주소, 7=도로명 주소, 8=x좌표, 9=y좌표
+*
+*/
+var shLayer;
+function shimtuOn(){
+	var index2 = 1;
+	var shStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 0.5],
+                    scale:0.2,
+                    src: "/images/egovframework/example/poi21.png"
+                }),
+                zindex: 1001
+            });
+    var shFeature;
+	var shSource = new ol.source.Vector();
+	shSource.set("name","마커레이어");
+	
+	var SHLTR_NM;	//졸음쉼터명
+	var ROAD_NM;	//도로노선명
+	var ROAD_DRC;	//도로노선방향
+	var TOILET_YN;	//화장실 유무
+	var MNG_NM;		//관리 기관명
+	var MNG_TEL;	//관리기관 전화번호
+	var ADRES;		//쉼터주소
+	var RN_ADRES;	//도로명 주소
+	var xlon;		//x
+	var ylat;		//y
+	
+	while(index2 !=247){	//246번까지 반복문 index2값이 247이 되면 멈추도록 조건
+		if(index2 !=7){		//obj값이 7번이 없음.
+			var list = new Array();	//배열로 졸음쉼터 hidden값  저장
+			$("input[name='"+index2+"']").each(function(index, item){	//obj값이 246번될떄 까지 배열속에 값을 넣어서 원하는 값 가져오기
+				   list.push($(item).val());
+			});	
+			SHLTR_NM= list[0]		//졸음쉼터명
+			ROAD_NM= list[1]		//도로노선명
+			ROAD_DRC= list[2]		//도로노선방향
+			TOILET_YN= list[3]		//화장실 유무
+			MNG_NM= list[4]			//관리 기관명
+			MNG_TEL= list[5]		//관리기관 전화번호
+			ADRES= list[6]			//쉼터주소
+			RN_ADRES= list[7]		//도로명 주소
+			xlon= list[8]			//x축
+			ylat= list[9]			//y축
+			shFeature = new ol.Feature({
+			                geometry: new ol.geom.Point([xlon,ylat])     //마커를 생성할 좌표 x,y 
+			            });
+			var marker_html="";
+            marker_html+="<span>졸음쉼터 명 :"+SHLTR_NM+"<br> 도로노선 명 : "+ROAD_NM+"<br>도로노선 방향 : "+ROAD_DRC+"<br>화장실 유무 : "+TOILET_YN+"<br>관리 기관명 : "+MNG_NM+"<br>관리기관 전화번호 : "+MNG_TEL+"<br>쉼터주소 : "+ADRES+"<br>도로명 주소 : "+RN_ADRES+"<span>";
+            cont ="123";
+            shFeature.set("subj",marker_html);  //html로 팝업내용 저장
+            shFeature.set("cont",cont); 
+			shSource.addFeature(shFeature);
+			
+			index2= index2+1;
+		}else if(index2 ==7){	//7번 없음
+			index2=index2+1;
+		}
+	}
+	shLayer = new ol.layer.Vector({
+                            source: shSource, //마커 feacture들
+                            style: shStyle //마커 스타일
+                        });
+	map1s.addLayer(shLayer);
+}
+function shimtuOff(){
+	map1s.removeLayer(shLayer);
+}
+
 var VworldHybrid = new ol.source.XYZ({
     url: 'http://api.vworld.kr/req/wmts/1.0.0/10036FCE-3940-374C-B2ED-E6FBDF47CFA9/Hybrid/{z}/{y}/{x}.png'
 }); //문자 타일 레이어
@@ -53,6 +126,8 @@ function createMap(option) {
 
     return map;
 }
+
+
 //마커를 찍기위한 함수
 function mapMakrerCreate(map) {
     map.on('click', function(evt) {

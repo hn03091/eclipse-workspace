@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>과제</title>
+    <title>공부</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css" >
     <link rel="stylesheet" href="/resources/css/map.css">
 
@@ -14,13 +15,14 @@
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2196f8832616f1028c78fef267e345ad"></script>
 </head>
 <body>
+
     <div style="font-size:30px;">
-		<input type="checkbox" id="mapb" >지도분할
+		<!--<input type="checkbox" id="mapb" >  지도분할-->
 		<br>
 		<input type="checkbox" id="map1b" value="map1" checked>지도1
-        <label id="mapOn"style="display: none; size:30px;">
+        <!-- <label id="mapOn"style="display: none; size:30px;">
             <input type="checkbox" id="map2b" value="map2">지도2
-        </label>
+        </label> -->
     </div>
     
 	<form id="searchForm" action="#" class="form_data"
@@ -70,6 +72,8 @@
 			</p>
 			<!--p><input type="checkbox" id="vworldTile" value="Hybrid">문자 타일</p-->
 			<button type="button" onclick="javascript:tileChange()">지도옵션선택</button>
+			
+			
 		</div>
 		<hr>
 		
@@ -83,6 +87,9 @@
                 <input type="checkbox" id="ctp" value="ctp">지도 1 '시도 주제도'
                 <br>
                 <input type="checkbox" id="icon" value="icon">지도 1 '졸음쉼터 주제도'
+				<br>
+				<input type="checkbox" id="accident" value="accident">지도 1 '사고다발지역'
+				
 				<div id="wms2" style="display:none;">
 					<hr>
 					<input type="checkbox" id="sig2" value="sig">지도 2 '시군구 주제도'
@@ -128,6 +135,7 @@
 				<hr>
 				<button type="button" onclick="javascript:map1_delete();">MAP1
 					옵션 전체삭제</button><br>
+					
 			</div>
 			<hr>
 			<p style="background-color: black; color: white;">팝업 내용작성</p>
@@ -213,8 +221,7 @@
 		</form>
 	</div>
 	<div id="info" style="top: 80%; left: 30%;"></div>
-	<div id="result"
-		style="overflow: scroll; width: 1500px; height: 500px; ">
+	<div id="result" style="overflow: scroll; width: 1500px; height: 500px; ">
 		<!-- P class="noticePrev">검색결과 -->
 
 		<p class="notice" style="display: none; color: red;">주소를 클릭 할 시 해당 좌표로
@@ -233,8 +240,89 @@
 
 
 		<p id="result_pos"></p>
+	</div>>
 	
+	
+	<form id="shimtu">
+		<c:forEach var="sList" items="${sList}">			
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.SHLTR_NM}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.ROAD_NM}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.ROAD_DRC}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.TOILET_YN}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.MNG_NM}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.MNG_TEL}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.ADRES}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.RN_ADRES}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.xlon}'>
+			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.ylat}'>			
+		</c:forEach>
+		
+	</form>
+	
+	<button type="button" id="btn_test">테스트요</button>	
     <script src="/resources/js/function.js"></script>
     <script src="/resources/js/map.js"></script>
+    <script>
+	/* $(document).on('click','#btn_test',function(){
+		var accident=[];
+		<c:forEach items="${aList}" var="aList">
+	    	var accident_li='';
+		    accident_li={
+		    	OBJT_ID : ${aList.OBJT_ID},
+		    	VIOLT_CN : '${aList.VIOLT_CN}',
+		    	xlon : ${aList.xlon},
+		    	ylat : ${aList.ylat}	
+		    };
+		    accident.push(accident_li);
+		  //console.log('사고옵젝: '+JSON.stringify(accident))
+		  //console.log('===============================')
+	    </c:forEach>
+	    
+	   	$.ajax({
+	    	method:"POST",
+	    	url:"http://localhost:8080/map.do",
+	    	contentType:"application/json",
+	    	data: JSON.stringify(accident)
+	    }).done(function(){
+	    	console.log('good');
+	    	console.log('사고옵젝: '+JSON.stringify(accident))
+	    });
+    
+	}); */
+	var markerLayer;
+	function accidentOn(map1){
+		var markerStyle = new ol.style.Style({
+	        image: new ol.style.Icon({
+	            anchor: [0.5, 0.5],
+                scale:0.2,
+	            src: "/images/egovframework/example/poi24.png"
+	        })
+	    });
+		var markerSource = new ol.source.Vector();
+		<c:forEach items="${aList}" var="aList">
+			var x;
+			var y;
+			x= ${aList.xlon}
+			y= ${aList.ylat}
+			
+			var markerFeature = new ol.Feature({
+		        geometry: new ol.geom.Point([x, y])     //마커를 생성할 좌표 x,y 
+		    });
+			markerSource.addFeature(markerFeature);
+		</c:forEach>  
+		markerLayer = new ol.layer.Vector({
+	        source: markerSource,
+	        style: markerStyle
+	    });
+	    map1.addLayer(markerLayer);
+	}
+	function accidentOff(map1){
+		map1.removeLayer(markerLayer);
+	}
+	</script>
+	
+		
+	
+    
 </body>
 </html>

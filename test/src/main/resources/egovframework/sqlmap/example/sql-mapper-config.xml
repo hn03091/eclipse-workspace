@@ -7,5 +7,7 @@
 		<typeAlias alias="searchVO" type="egovframework.example.sample.service.SampleDefaultVO"/>
 		<typeAlias alias="sampleVO" type="egovframework.example.sample.service.SampleVO"/>
 		<typeAlias alias="popupVO" type="egovframework.example.sample.service.PopupVO"/>
+		<typeAlias alias="shimtuVO" type="egovframework.example.sample.service.ShimtuVO"/>
+		<typeAlias alias="accidentVO" type="egovframework.example.sample.service.AccidentVO"/>
     </typeAliases>
 </configuration>

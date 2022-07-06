@@ -31,4 +31,9 @@
 <fullyQualifiedTypeName name="egovframework.example.sample.service.PopupVO"/>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.impl.PopupServiceImpl"/>
 <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.ShimtuService"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.ShimtuVO"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.accident.AccidentService"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.accident.AccidentVO"/>
 </qualifiedTypeNameHistroy>

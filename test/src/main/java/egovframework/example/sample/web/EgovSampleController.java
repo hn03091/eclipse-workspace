@@ -19,10 +19,13 @@ import java.util.List;
 
 import egovframework.example.sample.service.PopupService;
 import egovframework.example.sample.service.PopupVO;
+import egovframework.example.sample.service.AccidentService;
+import egovframework.example.sample.service.AccidentVO;
 import egovframework.example.sample.service.EgovSampleService;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.example.sample.service.SampleVO;
-
+import egovframework.example.sample.service.ShimtuService;
+import egovframework.example.sample.service.ShimtuVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -39,47 +42,35 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
-/**
- * @Class Name : EgovSampleController.java
- * @Description : EgovSample Controller Class
- * @Modification Information
- * @
- * @  수정일      수정자              수정내용
- * @ ---------   ---------   -------------------------------
- * @ 2009.03.16           최초생성
- *
- * @author 개발프레임웍크 실행환경 개발팀
- * @since 2009. 03.16
- * @version 1.0
- * @see
- *
- *  Copyright (C) by MOPAS All right reserved.
- */
 
 @Controller
 public class EgovSampleController {
 
 	@Resource(name = "popupService")
 	private PopupService popupService;
-	/** EgovSampleService */
-	@Resource(name = "sampleService")
-	private EgovSampleService sampleService;
+	
+	@Resource(name = "shimtuService")
+	private ShimtuService shimtuService;
+	
+	@Resource(name = "accidentService")
+	private AccidentService accidentService;
 
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
-
-	/** Validator */
-	@Resource(name = "beanValidator")
-	protected DefaultBeanValidator beanValidator;
-
-	/**
-	 * 글 목록을 조회한다. (pageing)
-	 * @param searchVO - 조회할 정보가 담긴 SampleDefaultVO
-	 * @param model
-	 * @return "egovSampleList"
-	 * @exception Exception
-	 */
+	
+	// 메인지도화면 //
+	@RequestMapping(value = "/map.do")
+	public String map(ShimtuVO shimtuVO, AccidentVO accidentVO, ModelMap model)throws Exception{
+		List<ShimtuVO> sList=shimtuService.shimtuList(shimtuVO);
+		List<AccidentVO> aList=accidentService.accidentList(accidentVO);
+		
+		model.addAttribute("sList",sList);
+		model.addAttribute("aList",aList);
+		return "hjb/map";
+	}
+	
+	
+	
+	//////////////////////////////////////////////////
+	
 	@RequestMapping(value="/hjb2.do")
 	public String hjb2()throws Exception{
 		
@@ -110,17 +101,39 @@ public class EgovSampleController {
 		//model.addAttribute("list", pList);
 		return "hjb/testmap";
 	}
-	@RequestMapping(value = "/map.do")
-	public String map()throws Exception{
-		
-		return "hjb/map";
-	}
+	
 	@RequestMapping(value = "/map2.do")
 	public String map2()throws Exception{
 		
 		return "hjb/map220623";
 	}
 	
+///////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	
+	
+	
+	
+	@Resource(name = "sampleService")
+	private EgovSampleService sampleService;
+
+	/** EgovPropertyService */
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertiesService;
+
+	/** Validator */
+	@Resource(name = "beanValidator")
+	protected DefaultBeanValidator beanValidator;
+
+	/**
+	 * 글 목록을 조회한다. (pageing)
+	 * @param searchVO - 조회할 정보가 담긴 SampleDefaultVO
+	 * @param model
+	 * @return "egovSampleList"
+	 * @exception Exception
+	 */
 	@RequestMapping(value = "/egovSampleList.do")
 	public String selectSampleList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model) throws Exception {
 

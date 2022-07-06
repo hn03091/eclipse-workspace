@@ -58,11 +58,11 @@ $(document).ready(function(){
     //----------2번 지도 WMS----------//
     $("#sig").change(function(){
         if($("#sig").is(":checked")){
+        
             map1.addLayer(sigWms);
             
         }else{
             map1.removeLayer(sigWms);
-            
         }
     });
     $("#ctp").change(function(){
@@ -74,7 +74,26 @@ $(document).ready(function(){
            
         }
     });
-    
+    $("#icon").change(function(){
+        if($("#icon").is(":checked")){
+            console.log('쉼터on');
+            shimtuOn();            
+        }else{
+            console.log('쉼터off');
+            shimtuOff();         
+              
+        }
+    });
+    $("#accident").change(function(){
+        if($("#accident").is(":checked")){
+            
+            accidentOn(map1);
+        }else{
+        
+            accidentOff(map1);     
+        }
+    });
+    /*
     $("#icon").change(function(){
         if($("#icon").is(":checked")){
             map1.addLayer(iconWms);
@@ -82,7 +101,7 @@ $(document).ready(function(){
             var view = map1.getView();
             map1.on('singleclick', function (evt) {
                 document.getElementById('info').innerHTML = '';
-                var viewResolution = /** @type {number} */ (view.getResolution());
+                var viewResolution = (view.getResolution());
                 var source = iconWms.getSource();
                 var url = source.getFeatureInfoUrl(
                         evt.coordinate,
@@ -104,7 +123,7 @@ $(document).ready(function(){
             $('#info').hide();
             
         }
-    });
+    });*/
     //----------2번 지도 WMS----------//
     $("#sig2").change(function(){
         if($("#sig2").is(":checked")){
@@ -274,7 +293,7 @@ $(document).ready(function(){
     var map2 = createMap(option2);
 
     roadview(map1);
-
+	
     searchIndex(map1);
     searchIndex2(map2);
 
