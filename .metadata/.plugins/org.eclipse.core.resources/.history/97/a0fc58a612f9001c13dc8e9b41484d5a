@@ -1,8 +1,0 @@
-package egovframework.example.sample.service.impl.accident;
-
-import egovframework.rte.psl.dataaccess.mapper.Mapper;
-
-@Mapper("accidentMapper")
-public interface AccidentMapper {
-
-}

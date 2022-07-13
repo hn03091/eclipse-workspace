@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>공부</title>
+    <title>과제</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css" >
     <link rel="stylesheet" href="/resources/css/map.css">
 
@@ -15,20 +15,20 @@
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2196f8832616f1028c78fef267e345ad"></script>
 </head>
 <body>
-
+<p><button type="button" onclick="javascript:mytestjson()">테스트</button></p>
     <div style="font-size:30px;">
-		<!--<input type="checkbox" id="mapb" >  지도분할-->
+		<input type="checkbox" id="mapb" >지도분할
 		<br>
 		<input type="checkbox" id="map1b" value="map1" checked>지도1
-        <!-- <label id="mapOn"style="display: none; size:30px;">
+        <label id="mapOn"style="display: none; size:30px;">
             <input type="checkbox" id="map2b" value="map2">지도2
-        </label> -->
+        </label>
     </div>
     
 	<form id="searchForm" action="#" class="form_data"
 		onsubmit="return false;search();">
 		<input type="hidden" name="page" value="1" /> <input type="hidden"
-			name="type" value="address" /> <input type="hidden" name="request"
+			name="type" value="address" /> <input type="hidden" name="request"`
 			value="search" /> <input type="hidden" name="size" value="100" /> <input
 			type="hidden" name="apiKey"
 			value="10036FCE-3940-374C-B2ED-E6FBDF47CFA9" /> <input type="hidden"
@@ -72,8 +72,6 @@
 			</p>
 			<!--p><input type="checkbox" id="vworldTile" value="Hybrid">문자 타일</p-->
 			<button type="button" onclick="javascript:tileChange()">지도옵션선택</button>
-			
-			
 		</div>
 		<hr>
 		
@@ -88,7 +86,7 @@
                 <br>
                 <input type="checkbox" id="icon" value="icon">지도 1 '졸음쉼터 주제도'
 				<br>
-				<input type="checkbox" id="accident" value="accident">지도 1 '사고다발지역'
+				<input type="checkbox" id="accident" value="accident">지도 1 '대형차량사고'
 				
 				<div id="wms2" style="display:none;">
 					<hr>
@@ -98,6 +96,7 @@
 					<br>
 					<input type="checkbox" id="icon2" value="icon">지도 2 '졸음쉼터 주제도'
 				</div>
+				<button type="button" onclick="javascript:testbtn();">졸음쉼터</button>
 				
         </div>
 		
@@ -135,7 +134,6 @@
 				<hr>
 				<button type="button" onclick="javascript:map1_delete();">MAP1
 					옵션 전체삭제</button><br>
-					
 			</div>
 			<hr>
 			<p style="background-color: black; color: white;">팝업 내용작성</p>
@@ -257,38 +255,11 @@
 			<input type="hidden" name='${sList.OBJT_ID}' value='${sList.ylat}'>			
 		</c:forEach>
 		
-	</form>
+	</form>	
 	
-	<button type="button" id="btn_test">테스트요</button>	
     <script src="/resources/js/function.js"></script>
     <script src="/resources/js/map.js"></script>
-    <script>
-	/* $(document).on('click','#btn_test',function(){
-		var accident=[];
-		<c:forEach items="${aList}" var="aList">
-	    	var accident_li='';
-		    accident_li={
-		    	OBJT_ID : ${aList.OBJT_ID},
-		    	VIOLT_CN : '${aList.VIOLT_CN}',
-		    	xlon : ${aList.xlon},
-		    	ylat : ${aList.ylat}	
-		    };
-		    accident.push(accident_li);
-		  //console.log('사고옵젝: '+JSON.stringify(accident))
-		  //console.log('===============================')
-	    </c:forEach>
-	    
-	   	$.ajax({
-	    	method:"POST",
-	    	url:"http://localhost:8080/map.do",
-	    	contentType:"application/json",
-	    	data: JSON.stringify(accident)
-	    }).done(function(){
-	    	console.log('good');
-	    	console.log('사고옵젝: '+JSON.stringify(accident))
-	    });
-    
-	}); */
+	<script>
 	var markerLayer;
 	function accidentOn(map1){
 		var markerStyle = new ol.style.Style({
@@ -319,10 +290,55 @@
 	function accidentOff(map1){
 		map1.removeLayer(markerLayer);
 	}
-	</script>
-	
+	function mytestjson(){
+		$.ajax({
+			url : '/test/testjson.json',
+            dataType : 'json',
+            async : false,
+			success : function(result){
+				$(result.model.testlist).each(function(key, data){
+					console.log(data);
+				});
+			},
+			complete: function(){
+				alert('성공');
+			},
+			error:function(){
+				alert('실패');
+			}
+		});
+	}
+	function getRecentDpiList() {
+        $.ajax({
+            url : '/dpi/getRecentDpiList.json',
+            dataType : 'json',
+            async : false,
+            beforeSend : function() {
+
+            },
+            success : function(result) {
+
+                var htmlRecent = '';
+                $(result.model.resultList).each(function(key, data) {
+                    // console.log(data);
+                    htmlRecent += '<li>';
+                    htmlRecent += '    <a href="javascript:moveDetailPage('+ data.no +')">';
+                    htmlRecent += '        <strong class="tit">'+ data.title +'</strong>';
+                    htmlRecent += '        <span class="date">'+ data.registDt +'</span>';
+                    htmlRecent += '    </a>';
+                    htmlRecent += '</li>';
+                });
+                $("#dpi_latest_list").html(htmlRecent);
+            },
+            complete : function() {
+
+            },
+            error : function(xhr) {
+                console.log(xhr);
+            }
+        });
+    }
 		
-	
-    
+	</script>
 </body>
 </html>

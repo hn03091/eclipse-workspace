@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="egovframework.example.sample.service.impl.AedMapper">
+	
+	<insert id="insertAed" parameterType="AedVO">
+	<![CDATA[
+	INSERT INTO AED	
+		(
+			OBJT_ID
+			, BUILDADDRESS
+			, BUILDPLACE
+			, GUGUN
+			, CLERKTEL
+			, MANAGER
+			, MANAGERTEL
+			, MFG
+			, MODEL
+			, ORG
+			, SIDO
+			, ZIPCODE1
+			, ZIPCODE2
+			, X
+			, Y
+			, LAT
+			, LON
+			, ADDRES
+			, GEOM
+			
+		)VALUES(
+			#{NUM}
+			, #{BUILDADDRESS}
+			, #{BUILDPLACE}
+			, #{GUGUN}
+			, #{CLERKTEL}
+			, #{MANAGER}
+			, #{MANAGERTEL}
+			, #{MFG}
+			, #{MODEL}
+			, #{ORG}
+			, #{SIDO}
+			, #{ZIPCODE1}
+			, #{ZIPCODE2}
+			, #{X}
+			, #{Y}
+			, #{LAT}
+			, #{LON}
+			, #{ADDRES}
+			, sdo_geometry(2001,3857,mdsys.sdo_point_type(#{X},#{Y}, NULL),NULL,NULL)
+				
+		)
+	]]>	
+	</insert>
+	 
+</mapper>

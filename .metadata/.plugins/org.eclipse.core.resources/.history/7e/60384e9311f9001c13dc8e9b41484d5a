@@ -1,5 +1,0 @@
-package egovframework.example.sample.service.impl.accident;
-
-public class AccidentServiceImpl {
-
-}

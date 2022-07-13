@@ -72,6 +72,7 @@ function shimtuOff(){
 	map1s.removeLayer(shLayer);
 }
 
+
 var VworldHybrid = new ol.source.XYZ({
     url: 'http://api.vworld.kr/req/wmts/1.0.0/10036FCE-3940-374C-B2ED-E6FBDF47CFA9/Hybrid/{z}/{y}/{x}.png'
 }); //문자 타일 레이어

@@ -86,10 +86,10 @@ $(document).ready(function(){
     });
     $("#accident").change(function(){
         if($("#accident").is(":checked")){
-            
+            console.log('On');
             accidentOn(map1);
         }else{
-        
+        	console.log('Off');
             accidentOff(map1);     
         }
     });

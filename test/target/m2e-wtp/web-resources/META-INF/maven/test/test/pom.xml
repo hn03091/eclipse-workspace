@@ -124,7 +124,13 @@
 			<artifactId>hsqldb</artifactId>
 			<version>2.5.0</version>
 		</dependency>
-
+		
+		<!-- javaproj -->
+		<dependency>
+            <groupId>com.jhlabs</groupId>
+            <artifactId>javaproj</artifactId>
+            <version>1.0</version>
+        </dependency>
 		<!-- mysql이나 oracle DB 사용시 아래 설정 추가 -->
 
 		<dependency>
