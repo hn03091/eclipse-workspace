@@ -17,6 +17,9 @@ public class AedServiceImpl extends EgovAbstractServiceImpl implements AedServic
 	public void insertAed(AedVO aedVO) throws Exception{
 		aedMapper.insertAed(aedVO);
 	}
-	
+	@Override
+	public void deleteAed(AedVO aedVO) throws Exception{
+		aedMapper.deleteAed(aedVO);
+	}
 
 }

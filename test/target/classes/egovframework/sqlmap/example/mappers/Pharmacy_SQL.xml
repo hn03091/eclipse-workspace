@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="egovframework.example.sample.service.impl.PharmacyMapper">
+	<insert id="insertPm" parameterType="PharmacyVO">
+	<![CDATA[
+		INSERT INTO PHARMACY
+			(
+				NUM,
+				DUTYADDR,
+				DUTYETC,
+				DUTYNAME,
+				DUTYTEL,
+				DUTYMAPIMG,
+				DUTYTIME1C,
+				DUTYTIME2C,
+				DUTYTIME3C,
+				DUTYTIME4C,
+				DUTYTIME5C,
+				DUTYTIME6C,
+				DUTYTIME7C,
+				DUTYTIME8C,
+				DUTYTIME1S,
+				DUTYTIME2S,
+				DUTYTIME3S,
+				DUTYTIME4S,
+				DUTYTIME5S,
+				DUTYTIME6S,
+				DUTYTIME7S,
+				DUTYTIME8S,
+				HPID,
+				POSTCDN1,
+				POSTCDN2,
+				LON,
+				LAT,
+				DUTYWEEKENDAT,
+				GEOM,
+				X,
+				Y
+			)VALUES(
+				#{NUM},
+				#{DUTYADDR},
+				#{DUTYETC},
+				#{DUTYNAME},
+				#{DUTYTEL},
+				#{DUTYMAPIMG},
+				#{DUTYTIME1C},
+				#{DUTYTIME2C},
+				#{DUTYTIME3C},
+				#{DUTYTIME4C},
+				#{DUTYTIME5C},
+				#{DUTYTIME6C},
+				#{DUTYTIME7C},
+				#{DUTYTIME8C},
+				#{DUTYTIME1S},
+				#{DUTYTIME2S},
+				#{DUTYTIME3S},
+				#{DUTYTIME4S},
+				#{DUTYTIME5S},
+				#{DUTYTIME6S},
+				#{DUTYTIME7S},
+				#{DUTYTIME8S},
+				#{HPID},
+				#{POSTCDN1},
+				#{POSTCDN2},
+				#{LON},
+				#{LAT},
+				#{DUTYWEEKENDAT},
+				sdo_geometry(2001,3857,mdsys.sdo_point_type(#{X},#{Y}, NULL),NULL,NULL),
+				#{X},
+				#{Y}
+			)
+		]]>
+	</insert>
+</mapper>

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="NUM=3042"/>
+		<item key="selection" value="VworldBase"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="num=100"/>
-			<item value="num=111"/>
-			<item value="num=3042"/>
-			<item value="num=3040"/>
-			<item value="num=30"/>
-			<item value="num=112,"/>
-			<item value="num=112"/>
-			<item value="num="/>
-			<item value="num"/>
-			<item value="org =null"/>
-			<item value="num=110"/>
-			<item value="112"/>
-			<item value="null"/>
-			<item value="org"/>
-			<item value="NUM=10"/>
+			<item value="vworldbase"/>
+			<item value="vworld"/>
+			<item value="map"/>
+			<item value="proj"/>
+			<item value="pro"/>
+			<item value="범"/>
+			<item value="search"/>
+			<item value="범례"/>
+			<item value="img"/>
+			<item value="DUTYTIME7S"/>
+			<item value="DUTYTIME7C"/>
+			<item value="DUTYTIME7"/>
+			<item value="DUTYTIME6C"/>
+			<item value="DUTYTIME6"/>
+			<item value="DUTYWEEKN"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

@@ -7,5 +7,5 @@
 	<sqlMap resource="egovframework/sqlmap/example/mappers/Shimtu_SQL.xml"/>
 	<sqlMap resource="egovframework/sqlmap/example/mappers/Accident_SQL.xml"/>
 	<sqlMap resource="egovframework/sqlmap/example/mappers/Aed_SQL.xml"/>
-		
+	<sqlMap resource="egovframework/sqlmap/example/mappers/Pharmacy_SQL.xml"/>
 </sqlMapConfig>

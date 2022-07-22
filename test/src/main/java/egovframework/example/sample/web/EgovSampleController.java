@@ -35,6 +35,8 @@ import egovframework.example.sample.service.AccidentVO;
 import egovframework.example.sample.service.AedService;
 import egovframework.example.sample.service.AedVO;
 import egovframework.example.sample.service.EgovSampleService;
+import egovframework.example.sample.service.PharmacyService;
+import egovframework.example.sample.service.PharmacyVO;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.example.sample.service.SampleVO;
 import egovframework.example.sample.service.ShimtuService;
@@ -80,14 +82,24 @@ public class EgovSampleController {
 
 	@Resource(name = "popupService")
 	private PopupService popupService;
-	
+	/**
+	 * 졸음쉼터 서비스
+	 */
 	@Resource(name = "shimtuService")
 	private ShimtuService shimtuService;
-	
+	/**
+	 * 대형 차량 사고 서비스
+	 */
 	@Resource(name = "accidentService")
 	private AccidentService accidentService;
+	/**
+	 * 자동 심장 충격기 서비스
+	 */
 	@Resource(name = "aedService")
 	private AedService aedService;
+	
+	@Resource(name = "pharmacyService")
+	private PharmacyService pmservice;
 	/*
 	// 1. URL
     //StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedFullDown"); 	/*URL
@@ -149,6 +161,7 @@ public class EgovSampleController {
     //}*/
 	/**
 	 * 좌표변환 - 경위도 -> 구글좌표계 
+	 * proj 사용 시 y 좌표 안나올시 x,y 위치 바꾸어 볼 것.
 	 * @param strX
 	 * @param strY
 	 * @return
@@ -183,7 +196,7 @@ public class EgovSampleController {
 		Point2D.Double dstProject = null;
 		Projection proj = ProjectionFactory.fromPROJ4Specification(proj4_w);
 
-		srcProject = new Point2D.Double(y, x);
+		srcProject = new Point2D.Double(y, x); //x,y 경도를 잘못입력하면 dstproject 에서 값을 못받아옴. 오류 날시 x,y 위치를 바꾸어보기.
 		
 		dstProject = proj.transform(srcProject, new Point2D.Double());
 		System.out.println(dstProject);
@@ -191,31 +204,41 @@ public class EgovSampleController {
 		return dstProject;
 		
 	}
+	@RequestMapping(value="/testservice.do")
+	public String testservice(PharmacyVO pharmacyVO) throws Exception{
+		pmservice.insertPm(pharmacyVO);
+		return "hjb/testservice";
+	}
+	/* 공공데이터 api XML파일을 파싱 하여 db로 insert
+	 *	스케쥴러 이용하여 주기적으로 db업데이트를 함.
+	 */
 	@RequestMapping(value="/test.do")
 	public String test(AedVO aedVO) throws Exception{
-		// 1. URL
-        //StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedFullDown"); 	/*URL*/
+		aedService.deleteAed(aedVO);
+
         String url = "http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedFullDown";
         String key = "14NskrpuJyyWPdtoP%2BLa6YFYgQLDZLEdqC4ADaLCYfg7K%2Fy3l16lBKbl6nGszFUjbGAFCCqh8%2Ft1e1WEfMhR%2Bg%3D%3D";	// 2. 오픈 API의요청 규격에 맞는 파라미터 생성, 발급받은 인증키.
-        int totalCount = 30483;	//총 데이터 갯수
+        int totalCount = 1;	//총 데이터 갯수
         int nowpage = 1;	//불러올 페이지
         int pageSize= 100;	//불러올 데이터 결과 수
-        int count= totalCount / pageSize +1;	// count+1 =데이터를 가져 올 횟수 
+        int count= 3;	// count+1 =데이터를 가져 올 횟수 
         
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //공부해야함
-        factory.setNamespaceAware(true);	//공부해야함
-        DocumentBuilder builder;	//공부
-        Document doc = null;	//공부
-        
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //xml 문서에서 dom 오브젝트 트리를 생성하는 api
+        factory.setNamespaceAware(true);	//xml 네임스페이스에 대한 지원을 제공하도록 지정하기
+        DocumentBuilder builder;	//XML 에서 DOM 문서 인스턴스를 가져오는 API를 정의함 -> XML에서의 Document를 얻을 수 있음
+        Document doc = null;	//xml에서 가져온 인스턴스를 저장하기 위함
         while(nowpage <= count) {
+        	System.out.println("While nowpage= "+nowpage);
+        	System.out.println("while Count= "+count);
+        	//공공데이터의 xml 값
         	String urlstr = url + "?ServiceKey=" + key + "&numOfRows=" + pageSize + "&pageNo=" + nowpage;
 	    	
 	        URL myurl = new URL(urlstr);
-	        // 4. 요청하고자 하는 URL과 통신하기 위한 Connection 객체 생성.
+	        //  요청하고자 하는 URL과 통신하기 위한 Connection 객체 생성.
 	        HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
-	        // 5. 통신을 위한 메소드 SET.
+	        //  통신을 위한 메소드 설정.
 	        conn.setRequestMethod("GET");
-	        // 6. 통신을 위한 Content-type SET. 
+	        //  통신을 위한 Content-type 설정. 
 	        conn.setRequestProperty("Content-type", "application/json");
 	        // 8. 전달받은 데이터를 BufferedReader 객체로 저장.
 	        BufferedReader rd;
@@ -229,7 +252,24 @@ public class EgovSampleController {
 	        while ((line = rd.readLine()) != null) {
 	            result = result + line.trim();	//trim() => 공백제거
 	        }
+	        if(totalCount<2) {
+	        	InputSource is = new InputSource(new StringReader(result));
+		        builder = factory.newDocumentBuilder();
+		        doc = builder.parse(is);
+		        XPathFactory xpathFactory = XPathFactory.newInstance();
+		        XPath xpath = xpathFactory.newXPath();
+		        XPathExpression expr = xpath.compile("//totalCount");
+		        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+		        NodeList child = nodeList.item(0).getChildNodes();
+		        Node node = child.item(0);
+		        String totalCount2 = node.getTextContent();
+		        totalCount = Integer.parseInt(totalCount2);
+		        System.out.println("totalCount = "+totalCount);
+		        count = totalCount/pageSize+1;
+		        System.out.println("Count = "+count);
+	        }
 	        //xml 파싱
+	        
 	        InputSource is = new InputSource(new StringReader(result));
 	        builder = factory.newDocumentBuilder();
 	        doc = builder.parse(is);
@@ -238,12 +278,12 @@ public class EgovSampleController {
 	        XPathExpression expr = xpath.compile("//items/item");
 	        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 	        for(int i = 0; i< nodeList.getLength(); i++) {
-	        	System.out.println("For 1 : " + i);
+	        	//System.out.println("For 1 : " + i);
 	        	NodeList child = nodeList.item(i).getChildNodes();
 	        	HashMap<String, String>xmlMap = new HashMap<String, String>();
-	        	System.out.println("child.getLength() : " + child.getLength());
+	        	//System.out.println("child.getLength() : " + child.getLength());
 	        	for(int j=0; j<child.getLength(); j++) {
-	        		System.out.println("For 2 : " + j);
+	        		//System.out.println("For 2 : " + j);
 	        		Node node = child.item(j);
 	        		//System.out.println("현재 노드 이름 : " + node.getNodeName());			//vo type
 	        		//System.out.println("현재 노드 타입 : " + node.getNodeType());			// ?
@@ -253,15 +293,13 @@ public class EgovSampleController {
 	        		
 	        		String content = node.getTextContent();
 	        		String type = node.getNodeName();
-	        		System.out.println("type= "+type);
-	        		System.out.println("content= "+content);
+	        		//System.out.println("type= "+type);
+	        		//System.out.println("content= "+content);
 	        		
 	        		xmlMap.put(type, content);
-	        		
-	        		//xmlList.add(content);
-        		
-        			if(type=="zipcode2") {
-        				
+	        	
+        			//if(type=="zipcode2") {
+        			if(node.getNextSibling()==null) {	
         				aedVO.setBUILDADDRESS(xmlMap.getOrDefault("buildAddress","null"));
         				aedVO.setBUILDPLACE(xmlMap.getOrDefault("buildPlace","null"));
         				aedVO.setCLERKTEL(xmlMap.getOrDefault("clerkTel","null"));
@@ -279,95 +317,21 @@ public class EgovSampleController {
         				aedVO.setZIPCODE2(xmlMap.getOrDefault("zipcode2","null"));
         				String address = aedVO.getSIDO()+aedVO.getGUGUN()+aedVO.getBUILDADDRESS();
         				aedVO.setADDRES(address);
-        				/*if(aedVO.getORG() ==null) {
-        					System.out.println("null");
-        					aedVO.setORG(" ");
-        					
-        				}
-    				/*	buildAddress, buildPlace, clerkTel,
-        				gugun, manager, managerTel, mfg, model, 
-        				org, rnum, sido, wgs84Lat, wgs84Lon, 
-        				zipcode1, zipcode
-    	        	*/	
-        			/*	String address = xmlList.get(10)+ xmlList.get(3) +xmlList.get(0);
-    	        	
-        				aedVO.setBUILDADDRESS(xmlList.get(0));
-        				aedVO.setBUILDPLACE(xmlList.get(1));
-        				aedVO.setCLERKTEL(xmlList.get(2));
-        				aedVO.setGUGUN(xmlList.get(3));
-        				aedVO.setMANAGER(xmlList.get(4));
-        				aedVO.setMANAGERTEL(xmlList.get(5));
-        				aedVO.setMFG(xmlList.get(6));
-        				aedVO.setMODEL(xmlList.get(7));
-        				aedVO.setORG(String.valueOf(xmlList.get(8)));
-        				aedVO.setNUM(xmlList.get(9));
-        				aedVO.setSIDO(xmlList.get(10));
-        				aedVO.setLON(xmlList.get(11));
-        				aedVO.setLAT(xmlList.get(12));
-        				aedVO.setZIPCODE1(xmlList.get(13));
-        				aedVO.setZIPCODE2(xmlList.get(14));
-        				aedVO.setADDRES(address);
-        			*/	
+        				
+        			
         				java.awt.geom.Point2D.Double inverseTransform = this.projTransform(aedVO.getLON(),aedVO.getLAT());	// 구글좌표계 > 경위도 변환    		
         				
         				String y = BigDecimal.valueOf(inverseTransform.getY()).toString();
         				String x = BigDecimal.valueOf(inverseTransform.getX()).toString();
                 		aedVO.setX(x);
                 		aedVO.setY(y);
-        			/*	 xml list test 
-        			 * 
-        				String buildAddress = xmlList.get(0);
-        				String buildPlace = xmlList.get(1);
-        				String clerkTel = xmlList.get(2);
-        				String gugun = xmlList.get(3);
-        				String manager = xmlList.get(4);
-        				String managerTel = xmlList.get(5);
-        				String mfg = xmlList.get(6);
-        				String model = xmlList.get(7);
-        				String org = xmlList.get(8);
-        				String rnum = xmlList.get(9);
-        				String sido = xmlList.get(10);
-        				String wgs84Lat = xmlList.get(11);
-        				String wgs84Lon = xmlList.get(12);
-        				String zipcode1 = xmlList.get(13);
-        				String zipcode2 = xmlList.get(14);
-        				String address = sido+ gugun +buildAddress;
-        				
-        				aedVO.setNUM(rnum);
-        				aedVO.setBUILDADDRESS(buildAddress);
-        				aedVO.setBUILDPLACE(buildPlace);
-        				aedVO.setCLERKTEL(clerkTel);	
-        				aedVO.setGUGUN(gugun);
-        				aedVO.setMANAGER(manager);
-        				aedVO.setMANAGERTEL(managerTel);
-        				aedVO.setMFG(mfg);
-        				aedVO.setMODEL(model);
-        				aedVO.setORG(org);
-        				aedVO.setSIDO(sido);
-        				aedVO.setZIPCODE1(zipcode1);
-        				aedVO.setZIPCODE2(zipcode2);
-        				aedVO.setLON(wgs84Lon);
-        				aedVO.setLAT(wgs84Lat);
-        				aedVO.setADDRES(address);
-        			*/
-        				/*java.awt.geom.Point2D.Double inverseTransform = this.projTransform(aedVO.getLON(), aedVO.getLAT());	// 구글좌표계 > 경위도 변환    		
-                		
-                		String x = BigDecimal.valueOf(inverseTransform.getX()).toString();
-                		String y = BigDecimal.valueOf(inverseTransform.getY()).toString();
-                		aedVO.setX(x);
-                		aedVO.setY(y);
-        				*/
+        			
                 		System.out.println(aedVO.toString());
                 		aedService.insertAed(aedVO);
-                		//xmlList = null;
                 		
 	        		}	
 		        }
-		    }
-	        // 연결 끊기
-	        //rd.close();
-	        //conn.disconnect();
-	       
+	        }
 	        nowpage= nowpage+1; //다음페이지 저장
         }
 		return "hjb/test";

@@ -10,5 +10,6 @@
 		<typeAlias alias="shimtuVO" type="egovframework.example.sample.service.ShimtuVO"/>
 		<typeAlias alias="accidentVO" type="egovframework.example.sample.service.AccidentVO"/>
 		<typeAlias alias="aedVO" type="egovframework.example.sample.service.AedVO"/>
+		<typeAlias alias="pharmacyVO" type="egovframework.example.sample.service.PharmacyVO"/>
     </typeAliases>
 </configuration>

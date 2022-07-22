@@ -21,7 +21,6 @@
 <fullyQualifiedTypeName name="org.w3c.dom.Element"/>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.PopupVO"/>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.impl.PopupServiceImpl"/>
-<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
 <fullyQualifiedTypeName name="egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl"/>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.ShimtuService"/>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.ShimtuVO"/>
@@ -33,9 +32,6 @@
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="org.springframework.web.servlet.ModelAndView"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ResponseBody"/>
-<fullyQualifiedTypeName name="org.springframework.stereotype.Service"/>
-<fullyQualifiedTypeName name="egovframework.example.sample.service.AedService"/>
-<fullyQualifiedTypeName name="java.net.URLEncoder"/>
 <fullyQualifiedTypeName name="java.net.URL"/>
 <fullyQualifiedTypeName name="java.net.HttpURLConnection"/>
 <fullyQualifiedTypeName name="java.io.BufferedReader"/>
@@ -44,10 +40,19 @@
 <fullyQualifiedTypeName name="javax.xml.parsers.DocumentBuilderFactory"/>
 <fullyQualifiedTypeName name="java.io.StringReader"/>
 <fullyQualifiedTypeName name="egovframework.example.sample.service.AedVO"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.math.BigDecimal"/>
 <fullyQualifiedTypeName name="java.awt.geom.Point2D"/>
 <fullyQualifiedTypeName name="org.springframework.expression.spel.ast.Projection"/>
 <fullyQualifiedTypeName name="com.jhlabs.map.proj.Projection"/>
 <fullyQualifiedTypeName name="com.jhlabs.map.proj.ProjectionFactory"/>
+<fullyQualifiedTypeName name="org.springframework.stereotype.Service"/>
+<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.AedService"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.PharmacyService"/>
+<fullyQualifiedTypeName name="egovframework.example.sample.service.PharmacyVO"/>
+<fullyQualifiedTypeName name="java.net.URLEncoder"/>
+<fullyQualifiedTypeName name="java.io.DataOutputStream"/>
+<fullyQualifiedTypeName name="org.postgresql.core.Parser"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>

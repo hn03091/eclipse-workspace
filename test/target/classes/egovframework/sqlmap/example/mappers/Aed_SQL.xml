@@ -50,5 +50,7 @@
 		)
 	]]>	
 	</insert>
-	 
+ 	<delete id="deleteAed">
+		TRUNCATE TABLE AED
+	</delete>
 </mapper>

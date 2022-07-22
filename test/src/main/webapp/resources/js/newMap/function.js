@@ -12,6 +12,7 @@ var VworldBase = new ol.source.XYZ({
 
 });
 
+
 function createMap(option) {
     var map = new ol.Map({
         controls: ol.control.defaults().extend([
@@ -22,9 +23,9 @@ function createMap(option) {
                 source: new ol.source.OSM(),
                 name: "OSM",
                 
-            // }), new ol.layer.Tile({
-            //     source: VworldSatellite,
-            //     name: "vworld",
+             }), new ol.layer.Tile({
+                 source: VworldSatellite,
+                 name: "vworld",
                 
             }), new ol.layer.Tile({
                 source: VworldHybrid,

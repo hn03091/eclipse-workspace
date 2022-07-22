@@ -7,4 +7,6 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface AedMapper {
 	
 	void insertAed(AedVO aedVO) throws Exception;
+	
+	void deleteAed(AedVO aedVO) throws Exception;
 }
